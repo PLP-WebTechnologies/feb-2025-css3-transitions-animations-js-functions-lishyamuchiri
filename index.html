@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biography with Animations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            transition: background-color 0.5s ease;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px;
+            object-fit: cover;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* CSS Animation for profile picture */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spin {
+            animation: spin 1s ease-in-out;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        select {
+            padding: 5px;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        .bio {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s ease;
+        }
+
+        h1, p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Biography</h1>
+        <img id="profilePic" class="profile-pic" src="per1-Photoroom (1).jpg" alt="Profile Picture">
+        <div class="bio">
+            <h2>lishya muchiri</h2>
+            <p>lishya  amuchiri is a passionate software developer with over 10 years of experience in web development. He specializes in creating interactive and user-friendly applications using modern technologies like HTML5, CSS3, and JavaScript.</p>
+        </div>
+        <select id="themeSelect">
+            <option value="light">Light Theme</option>
+            <option value="dark">Dark Theme</option>
+            <option value="blue">Blue Theme</option>
+        </select>
+        <button id="animateBtn">Spin Profile Picture</button>
+        <p>Current Theme: <span id="currentTheme">Light</span></p>
+    </div>
+
+    <script>
+        // JavaScript function to handle localStorage and animation
+        function initBioApp() {
+            const themeSelect = document.getElementById('themeSelect');
+            const animateBtn = document.getElementById('animateBtn');
+            const profilePic = document.getElementById('profilePic');
+            const currentThemeDisplay = document.getElementById('currentTheme');
+            const body = document.body;
+            const bio = document.querySelector('.bio');
+
+            // Theme configurations
+            const themes = {
+                light: { bodyBg: '#f0f0f0', bioBg: 'white' },
+                dark: { bodyBg: '#333', bioBg: '#444' },
+                blue: { bodyBg: '#e3f2fd', bioBg: '#bbdefb' }
+            };
+
+            // Retrieve saved theme from localStorage
+            const savedTheme = localStorage.getItem('bioTheme') || 'light';
+            applyTheme(savedTheme);
+            themeSelect.value = savedTheme;
+            currentThemeDisplay.textContent = themeSelect.options[themeSelect.selectedIndex].text;
+
+            // Apply theme to body and bio
+            function applyTheme(theme) {
+                body.style.backgroundColor = themes[theme].bodyBg;
+                bio.style.backgroundColor = themes[theme].bioBg;
+            }
+
+            // Event listener for theme selection
+            themeSelect.addEventListener('change', () => {
+                const selectedTheme = themeSelect.value;
+                applyTheme(selectedTheme);
+                currentThemeDisplay.textContent = themeSelect.options[themeSelect.selectedIndex].text;
+                // Save to localStorage
+                localStorage.setItem('bioTheme', selectedTheme);
+            });
+
+            // Event listener for animation trigger
+            animateBtn.addEventListener('click', () => {
+                // Remove animation class to reset
+                profilePic.classList.remove('spin');
+                // Trigger reflow to restart animation
+                void profilePic.offsetWidth;
+                // Add animation class
+                profilePic.classList.add('spin');
+            });
+        }
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initBioApp);
+    </script>
+</body>
+</html>
